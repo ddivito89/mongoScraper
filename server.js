@@ -35,7 +35,8 @@ app.get("/scrape", function(req, res) {
       // Add the text and href of every link, and save them as properties of the result object
       result.headline = $(this).children("header").children("h2").children("a").text();
       result.url = $(this).children("header").children("h2").children("a").attr("href");
-      result.summary = $(this).find("p").text();
+      result.summary = $(this).children("div").children("p").text();
+
 
       db.Article.count({
         headline: result.headline

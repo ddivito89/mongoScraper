@@ -1,9 +1,9 @@
 $(document).ready(function() {
   // $.ajax({method: "GET", url: "/scrape"}).then(function(data) {
-    populatePosts()
+  populatePosts()
 });
 
-$('#scrapeBtn').on('click', function(){
+$('#scrapeBtn').on('click', function() {
   $.ajax({method: "GET", url: "/scrape"}).then(function(data) {
     alert(data)
     populatePosts()
@@ -31,29 +31,28 @@ populatePosts = function() {
         </div>
         `)
 
-        if (result.comments.length > 0){
-          $(`#${result._id}-comments`).val('')
-          result.comments.forEach(function(result1){
-            $(`#${result._id}-comments`).prepend(`<p>${result1.text}</p>`)
-          })
-        }
+      if (result.comments.length > 0) {
+        $(`#${result._id}-comments`).val('')
+        result.comments.forEach(function(result1) {
+          $(`#${result._id}-comments`).prepend(`<p>${result1.text}</p>`)
+        })
+      }
     })
 
-    $('.comment-post').on('click', function(){
+    $('.comment-post').on('click', function() {
       var id = $(this).attr('id')
       var comment = $(`#${id}-text`).val().trim()
-        $.ajax({
-          method: "POST",
-          url: `/articles/${id}`,
-          data: {
-            id: id,
-            text: comment
-          }
-        })
-        .then(function(data) {
-          $(`#${id}-text`).val("")
-          populateComment(data._id)
-        });
+      $.ajax({
+        method: "POST",
+        url: `/articles/${id}`,
+        data: {
+          id: id,
+          text: comment
+        }
+      }).then(function(data) {
+        $(`#${id}-text`).val("")
+        populateComment(data._id)
+      });
     })
   })
 }
@@ -61,9 +60,9 @@ populatePosts = function() {
 populateComment = function(id) {
   $.ajax({method: "GET", url: `/comments/${id}`}).then(function(result) {
 
-    if (result.comments.length > 0){
+    if (result.comments.length > 0) {
       $(`#${result._id}-comments`).val('')
-      result.comments.forEach(function(result1){
+      result.comments.forEach(function(result1) {
         $(`#${result._id}-comments`).prepend(`<p>${result1.text}</p>`)
       })
     }
