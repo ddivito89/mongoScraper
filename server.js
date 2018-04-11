@@ -6,7 +6,8 @@ var axios = require("axios");
 
 var db = require("./models");
 
-var PORT = 3000;
+
+var PORT = process.env.PORT || 3000;
 
 var app = express();
 
@@ -33,7 +34,9 @@ app.get("/scrape", function(req, res) {
       // Add the text and href of every link, and save them as properties of the result object
       result.headline = $(this).children("header").children("h2").children("a").text();
       result.url = $(this).children("header").children("h2").children("a").attr("href");
-      result.summary = $(this).children("div").children("p").text();
+      result.summary = $(this).children("div");
+      console.log(result.headline)
+      console.log(result.summary)
 
 
       db.Article.count({
