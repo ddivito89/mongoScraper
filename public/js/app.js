@@ -61,7 +61,7 @@ populateComment = function(id) {
   $.ajax({method: "GET", url: `/comments/${id}`}).then(function(result) {
 
     if (result.comments.length > 0) {
-      $(`#${result._id}-comments`).val('')
+      $(`#${result._id}-comments`).empty()
       result.comments.forEach(function(result1) {
         $(`#${result._id}-comments`).prepend(`<p>${result1.text}</p>`)
       })
