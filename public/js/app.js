@@ -3,6 +3,13 @@ $(document).ready(function() {
     populatePosts()
 });
 
+$('#scrapeBtn').on('click', function(){
+  $.ajax({method: "GET", url: "/scrape"}).then(function(data) {
+    alert(data)
+    populatePosts()
+  })
+})
+
 populatePosts = function() {
   $.ajax({method: "GET", url: "/allPosts"}).then(function(data) {
 
