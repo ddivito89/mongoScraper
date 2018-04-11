@@ -29,12 +29,13 @@ app.use(express.static("public"));
 // Connect to the Mongo DB
 mongoose.connect("mongodb://localhost/week18Populater");
 
+// Routes
 
-
-
+// A GET route for scraping the echoJS website
 app.get("/scrape", function(req, res) {
-
-  axios.get("https://techcrunch.com/").then(function(response) {
+  // First, we grab the body of the html with request
+  axios.get("http://www.echojs.com/").then(function(response) {
+    // Then, we load that into cheerio and save it to $ for a shorthand selector
     var $ = cheerio.load(response.data);
 
     // Now, we grab every h2 within an article tag, and do the following:
@@ -43,10 +44,10 @@ app.get("/scrape", function(req, res) {
       var result = {};
 
       // Add the text and href of every link, and save them as properties of the result object
-      result.headline = $(this)
+      result.title = $(this)
         .children("a")
         .text();
-      result.url = $(this)
+      result.link = $(this)
         .children("a")
         .attr("href");
 

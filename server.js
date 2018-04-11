@@ -17,6 +17,7 @@ var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines
 
 mongoose.Promise = Promise;
 mongoose.connect(MONGODB_URI);
+var ObjectId = require('mongodb').ObjectID
 
 app.get("/scrape", function(req, res) {
   axios.get("http://www.techcrunch.com/").then(function(response) {
@@ -51,16 +52,49 @@ app.get("/scrape", function(req, res) {
 
 app.get("/allPosts", function(req, res) {
   db.Article.find({})
+    .populate('comments')
     .then(function(dbArticle) {
-
       res.json(dbArticle);
     })
     .catch(function(err) {
-
       res.json(err);
     });
 })
 
+
+
+// Route for grabbing a specific Article by id, populate it with it's note
+app.get("/comments/:id", function(req, res) {
+  // Using the id passed in the id parameter, prepare a query that finds the matching one in our db...
+  db.Article.findOne({ _id: req.params.id })
+  .populate('comments')
+    .then(function(dbArticle) {
+      // If we were able to successfully find an Article with the given id, send it back to the client
+      res.json(dbArticle);
+    })
+    .catch(function(err) {
+      // If an error occurred, send it to the client
+      res.json(err);
+    });
+});
+
+
+app.post("/articles/:id", function(req, res) {
+
+  db.Comment.create(req.body)
+    .then(function(dbComment) {
+
+      return db.Article.findOneAndUpdate({ _id: req.params.id }, {$push: { comments: dbComment._id }}, { new: true });
+    })
+    .then(function(dbArticle) {
+      // If we were able to successfully update an Article, send it back to the client
+      res.json(dbArticle);
+    })
+    .catch(function(err) {
+      // If an error occurred, send it to the client
+      res.json(err);
+    });
+});
 
 
 
